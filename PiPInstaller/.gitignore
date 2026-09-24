@@ -1,0 +1,6 @@
+/build/
+/dist/
+*.pk8
+*.p12
+*.jks
+!/assets/pip-overlay-platform.apk

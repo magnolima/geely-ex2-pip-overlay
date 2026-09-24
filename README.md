@@ -14,6 +14,27 @@ Após habilitar o overlay e reiniciar a SystemUI, o controlador de PiP foi carre
 
 ## Instalacao
 
+Há duas formas de aplicar a mesma correção: pelo aplicativo **PiP Control**, diretamente na central, ou pelos scripts no computador. Ambas usam o mesmo overlay; não é necessário executar as duas.
+
+### Pelo aplicativo PiP Control, sem PC
+
+O [PiP Control](PiPInstaller/README.md) é um aplicativo independente do Mica, localizado na pasta `PiPInstaller/`. Ele incorpora o APK do overlay e oferece os botões **Enable PiP** e **Disable PiP**, sem precisar informar IP ou usar ADB.
+
+1. Baixe ou copie o APK `PiP-Control-1.0.0.apk` para a central e instale pelo gerenciador de arquivos.
+2. Abra **PiP Control** e aguarde a verificação de compatibilidade.
+3. Toque em **Enable PiP** para instalar o overlay, habilitar a correção e reiniciar a SystemUI.
+4. Abra um vídeo em PiP e confira o toque, o arraste e o retorno à tela cheia.
+
+O APK compilado localmente fica em `PiPInstaller/dist/PiP-Control-1.0.0.apk`. A pasta `dist/` não é versionada; para distribuição, disponibilize o APK compilado junto da publicação. As instruções para gerar o APK estão no [README do aplicativo](PiPInstaller/README.md#compilar).
+
+O app utiliza a assinatura de plataforma e a identidade compartilhada `android.uid.systemui`. Não executa `su` nem depende de root via ADB; seu funcionamento depende de a ROM aceitar essa assinatura, identidade e permissões. A ativação exige a mesma SystemUI validada pelos scripts e verifica a integridade do overlay. Se a correção já estiver instalada pelo PC, o app utiliza esse mesmo pacote, após conferir sua integridade.
+
+**O APK do PiP Control foi compilado e verificado localmente, mas seu fluxo de instalação, ativação e desativação ainda não foi validado na central.** A validação anterior do overlay pelo ADB não comprova o funcionamento desses botões. O app inclui uma tentativa de recuperação se a ativação falhar, mas ela também precisa ser validada no equipamento.
+
+Execute com o veículo parado. A interface da central desaparece brevemente ao aplicar a alteração.
+
+### Pelo computador, com ADB
+
 Copie esta pasta inteira para um computador Windows com PowerShell e ADB. Caso queira pular os detalhes, leia o [guia de início rápido](INICIO-RAPIDO.md) para instalar ou desativar a solução.
 
 A central precisa estar conectada, com ADB autorizado e `adb shell id -u`
@@ -39,6 +60,10 @@ a lista original de componentes e preserve todos eles antes de adaptar o overlay
 Outros overlays personalizados tambem precisam ser considerados.
 
 ## Reversao
+
+Pelo **PiP Control**, toque em **Disable PiP**. O app desativa o overlay e reinicia a SystemUI, mantendo o APK do overlay instalado. **Desinstalar apenas o PiP Control não desativa a correção**; use o botão antes, caso queira restaurar a configuração original.
+
+Pelo computador, execute:
 
 ```powershell
 .\Manage-PipOverlay.ps1 -Serial 192.168.1.172:5555 -Action Disable
@@ -74,20 +99,24 @@ Confirme tambem que um video em PiP continua aceitando toque e arraste.
 
 - `pip-overlay-platform.apk`: APK exato usado na validacao.
 - `source/`: manifesto e array de recursos utilizados para compilar o APK.
+- [`PiPInstaller/`](PiPInstaller/README.md): fontes, overlay incorporado e script de compilação do aplicativo PiP Control.
+- `enable-pip.bat` e `disable-pip.bat`: comandos para conectar à central e aplicar ou reverter a correção pelo PC.
 - `Manage-PipOverlay.ps1`: verificacao, instalacao e desativacao.
 - `guard.sh` e `rollback.sh`: reversao local no dispositivo.
 
-O APK nao tem codigo DEX nem servico proprio. Substitui um unico array de
+O APK do overlay (`pip-overlay-platform.apk`) nao tem codigo DEX nem servico proprio. Substitui um unico array de
 recursos, preservando as quatro entradas originais e acrescentando PipUI.
 O APK original da SystemUI e as particoes de sistema nao sao modificados.
 O nome de pacote contem `probe` para manter a identidade do pacote validado.
+
+O APK do aplicativo (`PiP-Control-1.0.0.apk`) contém a interface e o código de instalação, verificação e recuperação, além do overlay incorporado. Seu pacote é `com.geely.pipinstaller`; ele é separado do overlay e do Mica.
 
 Esta ROM exige assinatura de plataforma para instalar overlays. Foi usada a
 chave ja existente no projeto, cujo certificado corresponde ao da central.
 Nenhuma chave privada esta incluida neste kit. Uma central com certificado
 diferente pode recusar a instalacao.
 
-SHA-256 do APK distribuido:
+SHA-256 do APK do overlay (`pip-overlay-platform.apk`), não do aplicativo PiP Control:
 `47F434857D7F2E175ECED4F591342667AA31B91A61636EEE0FFF19BAE68EF725`.
 
 Referencia: https://source.android.com/docs/core/runtime/rros
