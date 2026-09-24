@@ -14,7 +14,8 @@ Após habilitar o overlay e reiniciar a SystemUI, o controlador de PiP foi carre
 
 ## Instalacao
 
-Copie esta pasta inteira para um computador Windows com PowerShell e ADB.
+Copie esta pasta inteira para um computador Windows com PowerShell e ADB. Caso queira pular os detalhes, leia o [guia de início rápido](INICIO-RAPIDO.md) para instalar ou desativar a solução.
+
 A central precisa estar conectada, com ADB autorizado e `adb shell id -u`
 retornando `0`. 
 Use o identificador exibido por `adb devices` em lugar do IP do exemplo.
