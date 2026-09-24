@@ -1,9 +1,18 @@
 # PiP nativo: overlay para a SystemUI IHU629G
 
+## Introducao
+
 Este kit ativa `com.android.systemui.pip.PipUI` na ROM Android 9/API 28
-para Geely Ex2 firmware 1111. Atua no PiP do sistema, nao apenas no YouTube.
-Nao adiciona suporte a apps que nao implementam PiP e nao libera permissoes
-ou restricoes proprias de cada aplicativo.
+para Geely Ex2 firmware 1111.
+Este kit nao adiciona suporte a apps que nao implementam PiP.
+
+O PiP (Picture-in-Picture) da central já conseguia exibir vídeos em uma janela pequena, mas não respondia corretamente aos toques. A investigação identificou que a SystemUI continha as classes responsáveis pelo PiP, porém o componente com.android.systemui.pip.
+
+PipUI estava ausente da lista de inicialização. Sem ele, não era registrado o consumidor de entrada que permite movimentar a janela e acessar seus controles.
+
+A solução utiliza um Runtime Resource Overlay (RRO): um pequeno APK que substitui um recurso de configuração da SystemUI sem modificar seu APK original. O overlay redefine o array config_systemUIServiceComponents, preservando os quatro componentes existentes e acrescentando PipUI. Como a ROM exige assinatura de plataforma para instalar overlays, utilizamos a chave compatível já disponível no projeto.
+
+Após habilitar o overlay e reiniciar a SystemUI, o controlador de PiP foi carregado e passou a receber os eventos de toque. O arraste da janela e o retorno à tela cheia foram validados com o YouTube ReVanced. A correção atua no PiP nativo do sistema, podendo beneficiar outros aplicativos compatíveis, e pode ser revertida desativando o overlay.
 
 ## Instalacao
 
