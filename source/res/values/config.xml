@@ -1,0 +1,1 @@
+<resources><string-array name="config_systemUIServiceComponents" translatable="false"><item>com.android.systemui.Dependency</item><item>com.android.systemui.statusbar.CommandQueue$CommandQueueStart</item><item>com.android.systemui.keyguard.KeyguardViewMediator</item><item>com.android.systemui.SystemBars</item><item>com.android.systemui.pip.PipUI</item></string-array></resources>
