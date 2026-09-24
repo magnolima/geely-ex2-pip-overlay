@@ -6,9 +6,7 @@ Este kit ativa `com.android.systemui.pip.PipUI` na ROM Android 9/API 28
 para Geely Ex2 firmware 1111.
 Este kit nao adiciona suporte a apps que nao implementam PiP.
 
-O PiP (Picture-in-Picture) da central já conseguia exibir vídeos em uma janela pequena, mas não respondia corretamente aos toques. A investigação identificou que a SystemUI continha as classes responsáveis pelo PiP, porém o componente com.android.systemui.pip.
-
-PipUI estava ausente da lista de inicialização. Sem ele, não era registrado o consumidor de entrada que permite movimentar a janela e acessar seus controles.
+O PiP (Picture-in-Picture) da central já conseguia exibir vídeos em uma janela pequena, mas não respondia corretamente aos toques. A investigação identificou que a SystemUI continha as classes responsáveis pelo PiP, porém o componente com.android.systemui.pip.PipUI estava ausente da lista de inicialização. Sem ele, não era registrado o consumidor de entrada que permite movimentar a janela e acessar seus controles.
 
 A solução utiliza um Runtime Resource Overlay (RRO): um pequeno APK que substitui um recurso de configuração da SystemUI sem modificar seu APK original. O overlay redefine o array config_systemUIServiceComponents, preservando os quatro componentes existentes e acrescentando PipUI. Como a ROM exige assinatura de plataforma para instalar overlays, utilizamos a chave compatível já disponível no projeto.
 
@@ -92,3 +90,9 @@ SHA-256 do APK distribuido:
 `47F434857D7F2E175ECED4F591342667AA31B91A61636EEE0FFF19BAE68EF725`.
 
 Referencia: https://source.android.com/docs/core/runtime/rros
+
+## Isenção de responsabilidade
+
+Esta solução é experimental, fornecida “no estado em que se encontra”, sem garantia de compatibilidade, estabilidade ou funcionamento em todas as centrais e versões de firmware. A validação realizada se limita ao equipamento e às condições descritas neste documento.
+A instalação e o uso são de responsabilidade do usuário. Alterações na configuração da SystemUI podem provocar falhas na interface e exigir procedimentos de recuperação. Na medida permitida pela legislação aplicável, os autores e colaboradores não se responsabilizam por danos ou prejuízos decorrentes do uso desta solução. Essa declaração não afasta direitos ou responsabilidades que não possam ser excluídos por lei.
+Execute a instalação e os testes com o veículo estacionado em local seguro. Não utilize vídeos ou controles que desviem a atenção durante a condução.
